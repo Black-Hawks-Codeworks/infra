@@ -3,7 +3,6 @@ version: "3.8"
 services:
   db:
     image: postgres:15
-    restart: on-failure
     env_file:
       - .env.localdev
     volumes:
@@ -23,7 +22,6 @@ services:
     build:
       context: ../backend
       dockerfile: Dockerfile.localdev
-    restart: on-failure
     env_file:
       - .env.localdev
     environment:
