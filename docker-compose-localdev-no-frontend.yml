@@ -9,7 +9,7 @@ services:
       - db-data:/var/lib/postgresql/data
       - ./sql:/docker-entrypoint-initdb.d:ro
     ports:
-      - "5433:5432"
+      - "5432:5432"
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U $POSTGRES_USER"]
       interval: 10s
@@ -28,7 +28,7 @@ services:
       - ../backend:/app:cached
       - backend_node_modules:/app/node_modules
     ports:
-      - "3001:3000"
+      - "3000:3000"
     depends_on:
       db:
         condition: service_healthy

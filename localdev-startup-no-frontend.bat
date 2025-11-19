@@ -2,7 +2,7 @@
 REM Start local development environment (Windows .bat)
 
 SET SCRIPT_DIR=%~dp0
-SET COMPOSE_FILE=%SCRIPT_DIR%\docker-compose-localdev.yml
+SET COMPOSE_FILE=%SCRIPT_DIR%\docker-compose-localdev-no-frontend.yml
 SET PROJECT_NAME=black-hawks-portal
 
 IF EXIST "%SCRIPT_DIR%\.env.localdev.secrets" (

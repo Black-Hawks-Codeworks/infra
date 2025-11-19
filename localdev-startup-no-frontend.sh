@@ -7,7 +7,7 @@ print_help() {
 Usage: $0
 
 This script starts the application in local development mode using:
-- docker-compose-localdev.yml
+- docker-compose-localdev-no-frontend.yml
 - compose project name: black-hawks-portal
 
 It sources secrets from ./infra/.env.localdev.secrets if present, otherwise falls
@@ -27,7 +27,7 @@ fi
 # Always dev for this script
 # Resolve paths relative to the script location so the script can be run from repo root
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-DOCKER_COMPOSE_FILE="$SCRIPT_DIR/docker-compose-localdev.yml"
+DOCKER_COMPOSE_FILE="$SCRIPT_DIR/docker-compose-localdev-no-frontend.yml"
 COMPOSE_PROJECT_NAME=black-hawks-portal
 SECRETS_FILE="$SCRIPT_DIR/.env.localdev.secrets"
 
