@@ -3,7 +3,7 @@ set -euo pipefail
 
 # macOS double-clickable script (executable .command)
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-DOCKER_COMPOSE_FILE="$SCRIPT_DIR/docker-compose-localdev.yml"
+DOCKER_COMPOSE_FILE="$SCRIPT_DIR/docker-compose-localdev-no-frontend.yml"
 COMPOSE_PROJECT_NAME=black-hawks-portal
 SECRETS_FILE="$SCRIPT_DIR/.env.localdev.secrets"
 
