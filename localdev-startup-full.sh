@@ -7,11 +7,11 @@ print_help() {
 Usage: $0
 
 This script starts the application in local development mode using:
-- docker-compose-localdev-no-frontend.yml
-- compose project name: black-hawks-portal
+- docker-compose-localdev-full.yml
+- compose project name: black-hawks
 
 It sources secrets from ./infra/.env.localdev.secrets if present, otherwise falls
-back to ./infra/.env.localdev. The script removes the named backend node_modules
+back to ./infra/.env.localdev. The script removes the named backend and frontend node_modules
 volume so a rebuilt container will pick up dependency changes.
 
 Options:
@@ -27,7 +27,7 @@ fi
 # Always dev for this script
 # Resolve paths relative to the script location so the script can be run from repo root
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-DOCKER_COMPOSE_FILE="$SCRIPT_DIR/docker-compose-localdev-no-frontend.yml"
+DOCKER_COMPOSE_FILE="$SCRIPT_DIR/docker-compose-localdev-full.yml"
 COMPOSE_PROJECT_NAME=black-hawks
 SECRETS_FILE="$SCRIPT_DIR/.env.localdev.secrets"
 
@@ -48,7 +48,8 @@ else
   exit 1
 fi
 
-# Bring down existing containers and remove backend node_modules named volume
+# Bring down existing containers and remove backend and frontend node_modules named volumes
 docker compose -f "$DOCKER_COMPOSE_FILE" -p "$COMPOSE_PROJECT_NAME" down && \
   ( docker volume rm "${COMPOSE_PROJECT_NAME}_backend_node_modules" || true ) && \
+  ( docker volume rm "${COMPOSE_PROJECT_NAME}_frontend_node_modules" || true ) && \
   docker compose -f "$DOCKER_COMPOSE_FILE" -p "$COMPOSE_PROJECT_NAME" up --build

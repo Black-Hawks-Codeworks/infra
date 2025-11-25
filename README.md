@@ -4,7 +4,7 @@ Here is the DB and the scripts to start the containers for the backend and the d
 
 ## Local development (Linux / macOS / Windows)
 
-There are helper scripts to start the local development environment (Postgres + backend) using Docker Compose.
+There are helper scripts to start the local development environment (Postgres + backend, and later frontend) using Docker Compose.
 
 Files:
 
@@ -26,10 +26,6 @@ Linux/macOS (preferred):
 ```bash
 ./start-localdev.sh
 ```
-
-macOS double-click:
-
-Make `start-localdev.command` executable then double-click it in Finder.
 
 Windows:
 

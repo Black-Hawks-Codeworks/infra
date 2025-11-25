@@ -1,1 +1,3 @@
 *.txt
+.env.localdev.secrets
+COMPLETE_SETUP_GUIDE.md

@@ -1,0 +1,58 @@
+version: "3.8"
+
+services:
+  db:
+    image: postgres:15
+    env_file:
+      - .env.localdev
+    volumes:
+      - db-data:/var/lib/postgresql/data
+      - ./sql:/docker-entrypoint-initdb.d:ro
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $POSTGRES_USER"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - black-hawks-network
+
+  backend:
+    build:
+      context: ../backend
+      dockerfile: Dockerfile.localdev
+    env_file:
+      - .env.localdev
+    volumes:
+      - ../backend:/app:cached
+      - backend_node_modules:/app/node_modules
+    ports:
+      - "3000:3000"
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - black-hawks-network
+
+  frontend:
+    build:
+      context: ../frontend
+      dockerfile: Dockerfile.localdev
+    env_file:
+      - .env.localdev
+    volumes:
+      - ../frontend:/app:cached
+      - frontend_node_modules:/app/node_modules
+    ports:
+      - "5173:5173"
+    networks:
+      - black-hawks-network
+
+volumes:
+  db-data:
+  backend_node_modules:
+  frontend_node_modules:
+networks:
+  black-hawks-network:
+    driver: bridge
