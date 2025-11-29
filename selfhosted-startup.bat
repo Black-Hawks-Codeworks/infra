@@ -59,4 +59,3 @@ echo.
 echo To view logs: docker compose -f %COMPOSE_FILE% -p %PROJECT_NAME% logs -f
 echo To stop: docker compose -f %COMPOSE_FILE% -p %PROJECT_NAME% down
 echo.
-echo To start only the tunnel: docker compose -f %COMPOSE_FILE% -p %PROJECT_NAME% up -d cloudflared
