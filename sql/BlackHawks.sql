@@ -1,19 +1,3 @@
--- Initialize database schema and seed data
--- Creates a `users` table and a `"user"` view (so both "user" and users can be queried)
-
-BEGIN;
-
-CREATE TABLE IF NOT EXISTS users (
-  id SERIAL PRIMARY KEY,
-  name TEXT NOT NULL,
-  email TEXT NOT NULL UNIQUE,
-  age INTEGER
-);
-
--- Provide a convenience view named "user" if something expects that exact name
-CREATE OR REPLACE VIEW "user" AS
-  SELECT * FROM users;
-
 CREATE TYPE "required_actions" AS ENUM (
   'client_payment',
   'client_confirmation',
@@ -211,6 +195,3 @@ ALTER TABLE "returns" ADD FOREIGN KEY ("employee_id") REFERENCES "employees" ("i
 ALTER TABLE "notifications" ADD FOREIGN KEY ("repair_id") REFERENCES "repairs" ("id");
 
 ALTER TABLE "notifications" ADD FOREIGN KEY ("return_id") REFERENCES "returns" ("id");
-
-
-COMMIT;
