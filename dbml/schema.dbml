@@ -1,0 +1,192 @@
+// Use DBML to define your database structure
+//glossa modelopoiisis tou dbdiagram
+// Docs: https://dbml.dbdiagram.io/docs
+
+// Enums
+Enum required_actions {
+  client_payment
+  client_confirmation
+  employee_confirmation
+  technician_confirmation
+}
+
+Enum user_role {
+  manager
+  client
+  technician
+  employee
+}
+
+Enum device_categories {
+  household_goods
+  smart_phone
+  tablet
+  laptop
+  pc
+  printer
+  other  
+}
+
+Enum warranty_type {
+  basic
+  extended
+}
+
+Enum repair_status {
+  pending
+  checking_warranty
+  in_progress
+  completed
+  cancelled
+}
+
+Enum return_status {
+  pending
+  checking_warranty
+  in_progress
+  completed
+  cancelled
+}
+
+// Master Users Table
+Table users {
+  id integer [primary key, increment]
+  username varchar [not null, unique, note: 'Email or username for login']
+  password varchar [not null]
+  role user_role [not null]
+  created_at timestamp [default: `now()`]
+  updated_at timestamp [default: `now()`]
+}
+
+// Role-Specific Tables (One-to-One with users)
+Table clients {
+  id integer [primary key, increment]
+  user_id integer [not null, unique]
+  full_name varchar [not null]
+  city varchar
+  phone_number varchar
+  email varchar
+  created_at timestamp [default: `now()`]
+  updated_at timestamp [default: `now()`]
+}
+
+Table technicians {
+  id integer [primary key, increment]
+  user_id integer [not null, unique]
+  company_name varchar [not null]
+  city varchar [not null]
+  capacity integer [default: 0, note: 'Current workload']
+  max_capacity integer [not null, note: 'Maximum capacity']
+  created_at timestamp [default: `now()`]
+  updated_at timestamp [default: `now()`]
+}
+
+Table employees {
+  id integer [primary key, increment]
+  user_id integer [not null, unique]
+  branch_name varchar [not null]
+  city varchar
+  created_at timestamp [default: `now()`]
+  updated_at timestamp [default: `now()`]
+}
+
+Table managers {
+  id integer [primary key, increment]
+  user_id integer [not null, unique]
+  full_name varchar [not null]
+  email varchar
+  created_at timestamp [default: `now()`]
+  updated_at timestamp [default: `now()`]
+}
+
+// Core Tables
+Table devices {
+  id integer [primary key, increment]
+  name varchar [not null]
+  description text 
+  color varchar 
+  purchase_cost double
+  is_damaged boolean [default: false]
+  image_url varchar [note: 'URL or path to device image']
+  warranty_id integer
+  category device_categories [default: `other`, not null]
+  created_at timestamp [default: `now()`]
+  updated_at timestamp [default: `now()`]
+}
+
+Table warranties {
+  id integer [primary key, increment]
+  type warranty_type [not null]
+  starts_at timestamp [not null]
+  expires_at timestamp [not null]
+  created_at timestamp [default: `now()`]
+  updated_at timestamp [default: `now()`]
+}
+
+// Transaction Tables
+Table repairs {
+  id integer [primary key, increment]
+  status repair_status [not null, default: 'pending']
+  cost double
+  device_id integer [not null]
+  client_id integer [not null]
+  technician_id integer [not null]
+  created_at timestamp [default: `now()`]
+  updated_at timestamp [default: `now()`]
+}
+
+Table returns {
+  id integer [primary key, increment]
+  status return_status [not null, default: 'pending']
+  device_id integer [not null]
+  client_id integer [not null]
+  employee_id integer [not null]
+  created_at timestamp [default: `now()`]
+  updated_at timestamp [default: `now()`]
+}
+
+Table notifications {
+  id integer [primary key, increment]
+  repair_id integer [note: 'Foreign key to repairs, null if this is a return notification']
+  return_id integer [note: 'Foreign key to returns, null if this is a repair notification']
+  message varchar [not null]
+  required_actions required_actions
+  created_at timestamp [default: `now()`]
+  updated_at timestamp [default: `now()`]
+}
+
+// KPIs Table (for manager dashboard)
+Table kpis {
+  id integer [primary key, increment]
+  metric_name varchar [not null, note: 'e.g., total_repairs, total_returns, average_repair_time']
+  metric_value decimal
+  period_start timestamp
+  period_end timestamp
+  created_at timestamp [default: `now()`]
+  updated_at timestamp [default: `now()`]
+}
+
+// Relationships
+
+// Users to Role Tables (One-to-One)
+Ref: "clients"."user_id" - "users"."id"
+Ref: "technicians"."user_id" - "users"."id"
+Ref: "employees"."user_id" - "users"."id"
+Ref: "managers"."user_id" - "users"."id"
+
+// Devices and Warranties (Zero or One-to-One)
+Ref: "devices"."warranty_id" - "warranties"."id"
+
+// Repairs Relationships
+Ref: "repairs"."device_id" > "devices"."id"
+Ref: "repairs"."client_id" > "clients"."id"
+Ref: "repairs"."technician_id" > "technicians"."id"
+
+// Returns Relationships
+Ref: "returns"."device_id" > "devices"."id"
+Ref: "returns"."client_id" > "clients"."id"
+Ref: "returns"."employee_id" > "employees"."id"
+
+// Notifications Relationships (One-to-Many: one repair/return can have many notifications)
+Ref: "notifications"."repair_id" > "repairs"."id"
+Ref: "notifications"."return_id" > "returns"."id"
