@@ -29,7 +29,7 @@ fi
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 DOCKER_COMPOSE_FILE="$SCRIPT_DIR/docker-compose-localdev-full.yml"
 COMPOSE_PROJECT_NAME=black-hawks
-SECRETS_FILE="$SCRIPT_DIR/.env.localdev.secrets"
+SECRETS_FILE="$SCRIPT_DIR/.env.localdev"
 
 if [[ -f "$SECRETS_FILE" ]]; then
   echo "Sourcing secrets from $SECRETS_FILE"
