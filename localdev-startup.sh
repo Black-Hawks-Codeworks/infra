@@ -10,8 +10,7 @@ This script starts the application in local development mode using:
 - docker-compose-localdev-full.yml
 - compose project name: black-hawks
 
-It sources secrets from ./infra/.env.localdev.secrets if present, otherwise falls
-back to ./infra/.env.localdev. The script removes the named backend and frontend node_modules
+It sources environment variables from ./infra/.env.localdev. The script removes the named backend and frontend node_modules
 volume so a rebuilt container will pick up dependency changes.
 
 Options:
@@ -29,24 +28,13 @@ fi
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 DOCKER_COMPOSE_FILE="$SCRIPT_DIR/docker-compose-localdev-full.yml"
 COMPOSE_PROJECT_NAME=black-hawks
-SECRETS_FILE="$SCRIPT_DIR/.env.localdev"
+ENV_FILE="$SCRIPT_DIR/.env.localdev"
 
-if [[ -f "$SECRETS_FILE" ]]; then
-  echo "Sourcing secrets from $SECRETS_FILE"
-  set -a
-  # shellcheck source=/dev/null
-  source "$SECRETS_FILE"
-  set +a
-elif [[ -f "$SCRIPT_DIR/.env.localdev" ]]; then
-  echo "Secrets file not found, sourcing $SCRIPT_DIR/.env.localdev"
-  set -a
-  # shellcheck source=/dev/null
-  source "$SCRIPT_DIR/.env.localdev"
-  set +a
-else
-  echo "Error: no secrets file found (tried $SECRETS_FILE and $SCRIPT_DIR/.env.localdev)" >&2
-  exit 1
-fi
+echo "Sourcing environment from $ENV_FILE"
+set -a
+# shellcheck source=/dev/null
+source "$ENV_FILE"
+set +a
 
 # Bring down existing containers and remove backend and frontend node_modules named volumes
 docker compose -f "$DOCKER_COMPOSE_FILE" -p "$COMPOSE_PROJECT_NAME" down && \
