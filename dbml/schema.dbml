@@ -150,7 +150,7 @@ Table notifications {
   repair_id integer [note: 'Foreign key to repairs, null if this is a return notification']
   return_id integer [note: 'Foreign key to returns, null if this is a repair notification']
   message varchar [not null]
-  required_actions required_actions
+  required_actions required_actions [not null, default: 'client_payment']
   created_at timestamp [default: `now()`]
   updated_at timestamp [default: `now()`]
 }

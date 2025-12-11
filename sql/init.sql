@@ -242,23 +242,49 @@ ON CONFLICT (user_id) DO NOTHING;
 INSERT INTO warranties (type, starts_at, expires_at) VALUES
   ('basic', '2025-01-01', '2026-01-01'),
   ('extended', '2025-01-01', '2027-01-01'),
-  ('basic', '2025-01-01', '2026-01-01')
+  ('basic', '2025-01-01', '2026-01-01'),
+  ('extended', '2025-02-01', '2028-02-01'),
+  ('basic', '2025-03-01', '2026-03-01')
 ON CONFLICT (id) DO NOTHING;
 
 INSERT INTO devices (name, description, color, purchase_cost, is_damaged, image_url, warranty_id, category) VALUES
   ('iPhone 13', 'A new iPhone 13', 'Red', 1000, false, 'https://example.com/iphone13.jpg', 1, 'smart_phone'),
   ('MacBook Pro', 'A new MacBook Pro', 'Silver', 2000, false, 'https://example.com/macbookpro.jpg', 2, 'laptop'),
   ('Dell XPS', 'A new Dell XPS', 'Black', 1500, false, 'https://example.com/dellxps.jpg', 3, 'laptop'),
-  ('Nokia 3310', 'A new Nokia 3310', 'Blue', 100, false, 'https://example.com/nokia3310.jpg', 4, 'smart_phone')
+  ('Nokia 3310', 'A new Nokia 3310', 'Blue', 100, false, 'https://example.com/nokia3310.jpg', 4, 'smart_phone'),
+  ('iPad Air', 'A new iPad Air', 'Space Gray', 600, false, 'https://example.com/ipadair.jpg', 5, 'tablet')
 ON CONFLICT (id) DO NOTHING;
 
--- INSERT INTO repairs (status, cost, device_id, client_id, technician_id) VALUES
---   ('pending', 100, 1, 1, 1),
---   ('pending', 200, 2, 2, 2),
---   ('pending', 300, 3, 3, 3)
--- ON CONFLICT DO NOTHING;
+INSERT INTO repairs (status, cost, device_id, client_id, technician_id) VALUES
+  ('pending', 100.50, 1, 1, 1),
+  ('in_progress', 250.75, 2, 2, 1),
+  ('checking_warranty', 150.00, 3, 3, 1),
+  ('completed', 300.25, 4, 1, 1),
+  ('pending', 75.00, 5, 2, 1)
+ON CONFLICT (id) DO NOTHING;
 
--- INSERT INTO returns (status, device_id, client_id, employee_id) VALUES
---   ('pending', 1, 1, 1);
+INSERT INTO returns (status, device_id, client_id, employee_id) VALUES
+  ('pending', 1, 1, 1),
+  ('checking_warranty', 2, 2, 2),
+  ('in_progress', 3, 3, 1),
+  ('completed', 4, 1, 2),
+  ('pending', 5, 2, 1)
+ON CONFLICT (id) DO NOTHING;
+
+INSERT INTO notifications (repair_id, return_id, message, required_actions) VALUES
+  (1, NULL, 'Repair request received. Payment required.', 'client_payment'),
+  (NULL, 1, 'Return request received. Confirmation required.', 'client_confirmation'),
+  (2, NULL, 'Repair in progress. Employee confirmation needed.', 'employee_confirmation'),
+  (NULL, 2, 'Return warranty check complete. Technician confirmation needed.', 'technician_confirmation'),
+  (3, NULL, 'Repair completed. Client confirmation required.', 'client_confirmation')
+ON CONFLICT (id) DO NOTHING;
+
+INSERT INTO kpis (metric_name, metric_value, period_start, period_end) VALUES
+  ('total_repairs', 5, '2025-01-01', '2025-12-31'),
+  ('total_returns', 5, '2025-01-01', '2025-12-31'),
+  ('average_repair_time', 2.5, '2025-01-01', '2025-12-31'),
+  ('average_repair_cost', 175.30, '2025-01-01', '2025-12-31'),
+  ('completed_repairs', 1, '2025-01-01', '2025-12-31')
+ON CONFLICT (id) DO NOTHING;
 
 COMMIT;
