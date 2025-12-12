@@ -5,16 +5,8 @@ SET SCRIPT_DIR=%~dp0
 SET COMPOSE_FILE=%SCRIPT_DIR%\docker-compose-localdev-full.yml
 SET PROJECT_NAME=black-hawks
 
-IF EXIST "%SCRIPT_DIR%\.env.localdev.secrets" (
-  echo Sourcing secrets from %SCRIPT_DIR%\.env.localdev.secrets
-  for /f "usebackq delims=" %%i in ("%SCRIPT_DIR%\.env.localdev.secrets") do set "%%i"
-) ELSE IF EXIST "%SCRIPT_DIR%\.env.localdev" (
-  echo Sourcing %SCRIPT_DIR%\.env.localdev
-  for /f "usebackq delims=" %%i in ("%SCRIPT_DIR%\.env.localdev") do set "%%i"
-) ELSE (
-  echo Error: no secrets file found in %SCRIPT_DIR% >&2
-  exit /b 1
-)
+echo Sourcing environment from %SCRIPT_DIR%\.env.localdev
+for /f "usebackq delims=" %%i in ("%SCRIPT_DIR%\.env.localdev") do set "%%i"
 
 REM Bring down existing stack, remove backend and frontend node_modules volumes, and bring up
 docker compose -f "%COMPOSE_FILE%" -p %PROJECT_NAME% down
