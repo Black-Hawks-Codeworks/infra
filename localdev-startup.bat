@@ -2,7 +2,7 @@
 REM Start local development environment with frontend (Windows .bat)
 
 SET SCRIPT_DIR=%~dp0
-SET COMPOSE_FILE=%SCRIPT_DIR%\docker-compose-localdev-full.yml
+SET COMPOSE_FILE=%SCRIPT_DIR%\docker-compose-localdev.yml
 SET PROJECT_NAME=black-hawks
 
 echo Sourcing environment from %SCRIPT_DIR%\.env.localdev

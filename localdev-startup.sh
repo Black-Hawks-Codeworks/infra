@@ -26,7 +26,7 @@ fi
 # Always dev for this script
 # Resolve paths relative to the script location so the script can be run from repo root
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-DOCKER_COMPOSE_FILE="$SCRIPT_DIR/docker-compose-localdev-full.yml"
+DOCKER_COMPOSE_FILE="$SCRIPT_DIR/docker-compose-localdev.yml"
 COMPOSE_PROJECT_NAME=black-hawks
 ENV_FILE="$SCRIPT_DIR/.env.localdev"
 
