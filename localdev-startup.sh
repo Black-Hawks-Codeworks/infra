@@ -7,7 +7,7 @@ print_help() {
 Usage: $0
 
 This script starts the application in local development mode using:
-- docker-compose-localdev-full.yml
+- docker-compose-localdev.yml
 - compose project name: black-hawks
 
 It sources environment variables from ./infra/.env.localdev. The script removes the named backend and frontend node_modules
